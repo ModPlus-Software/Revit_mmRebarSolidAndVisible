@@ -16,6 +16,8 @@ namespace mmRebarSolidAndVisible
     [Transaction(TransactionMode.Manual)]
     public sealed class RebarSolidAndVisible : IExternalCommand
     {
+        private const string LangItem = "mmRebarSolidAndVisible";
+
         Result IExternalCommand.Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             Statistic.SendCommandStarting(new Interface());
@@ -86,7 +88,7 @@ namespace mmRebarSolidAndVisible
                     ObjReinPickFilter selFilter = new ObjReinPickFilter();
                     try
                     {
-                        pickedRef = sel.PickObject(ObjectType.Element, selFilter, "Выберите элемент с арматурой");
+                        pickedRef = sel.PickObject(ObjectType.Element, selFilter, Language.GetItem(LangItem, "msg1"));
                     }
                     catch (OperationCanceledException)
                     {
