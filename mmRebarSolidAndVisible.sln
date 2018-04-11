@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mmRebarSolidAndVisible_2015", "mmRebarSolidAndVisible_2015\mmRebarSolidAndVisible_2015.csproj", "{A2A4EDD9-3815-4159-8111-ECCB4D12E44B}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mmRebarSolidAndVisible_2017", "mmRebarSolidAndVisible_2017\mmRebarSolidAndVisible_2017.csproj", "{00F05DAA-A0A6-4EAB-8587-07F01898C457}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mmRebarSolidAndVisible_2018", "mmRebarSolidAndVisible_2018\mmRebarSolidAndVisible_2018.csproj", "{19C497CC-4FA3-4233-A826-06AAD2A6B6E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mmRebarSolidAndVisible_2019", "mmRebarSolidAndVisible_2019\mmRebarSolidAndVisible_2019.csproj", "{7C68F7F7-02F4-4A08-8640-D34CD1560407}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{19C497CC-4FA3-4233-A826-06AAD2A6B6E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19C497CC-4FA3-4233-A826-06AAD2A6B6E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19C497CC-4FA3-4233-A826-06AAD2A6B6E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C68F7F7-02F4-4A08-8640-D34CD1560407}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C68F7F7-02F4-4A08-8640-D34CD1560407}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C68F7F7-02F4-4A08-8640-D34CD1560407}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C68F7F7-02F4-4A08-8640-D34CD1560407}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
