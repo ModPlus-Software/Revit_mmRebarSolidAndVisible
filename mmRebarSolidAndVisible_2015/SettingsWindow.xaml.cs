@@ -23,10 +23,14 @@
 
         private void BtClose_OnClick(object sender, RoutedEventArgs e)
         {
+            Close();
+        }
+
+        private void SettingsWindow_OnClosed(object sender, EventArgs e)
+        {
             UserConfigFile.SetValue(LangItem, "OnSelectionVariant", CbOn.SelectedIndex.ToString(), false);
             UserConfigFile.SetValue(LangItem, "OffSelectionVariant", CbOff.SelectedIndex.ToString(), false);
             UserConfigFile.SaveConfigFile();
-            Close();
         }
     }
 }
