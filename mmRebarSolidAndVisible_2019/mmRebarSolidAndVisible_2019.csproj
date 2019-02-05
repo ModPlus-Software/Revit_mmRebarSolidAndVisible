@@ -16,15 +16,15 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\..\..\ModPlus\Functions\Revit\mmRebarSolidAndVisible\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;R2019</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\..\..\ModPlus\Functions\Revit\mmRebarSolidAndVisible\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE;R2019</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -34,6 +34,12 @@
       <HintPath>..\..\..\..\..\..\..\ModPlus\Extensions\ModPlusAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ModPlusStyle">
+      <HintPath>..\..\..\..\..\..\..\ModPlus\Extensions\ModPlusStyle.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="RevitAPI">
       <HintPath>C:\_Revit dlls\2019\RevitAPI.dll</HintPath>
       <Private>False</Private>
@@ -43,6 +49,8 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
     <!--
     
     <Reference Include="System.Core"/>
@@ -60,10 +68,32 @@
 	-->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\mmRebarSolidAndVisible_2015\RebarSolidAndVisible.cs">
-      <Link>RebarSolidAndVisible.cs</Link>
+    <Compile Include="..\mmrebarsolidandvisible_2015\commands\RebarSolidAndVisible.cs">
+      <Link>Commands\RebarSolidAndVisible.cs</Link>
     </Compile>
-    <Compile Include="Interface.cs" />
+    <Compile Include="..\mmrebarsolidandvisible_2015\commands\RebarSolidAndVisibleOff.cs">
+      <Link>Commands\RebarSolidAndVisibleOff.cs</Link>
+    </Compile>
+    <Compile Include="..\mmrebarsolidandvisible_2015\commands\RebarSolidAndVisibleSettings.cs">
+      <Link>Commands\RebarSolidAndVisibleSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\mmRebarSolidAndVisible_2015\MainWork.cs">
+      <Link>MainWork.cs</Link>
+    </Compile>
+    <Compile Include="..\mmRebarSolidAndVisible_2015\ObjReinPickFilter.cs">
+      <Link>ObjReinPickFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\mmRebarSolidAndVisible_2015\Properties\AssemblyInfoCommon.cs">
+      <Link>Properties\AssemblyInfoCommon.cs</Link>
+    </Compile>
+    <Compile Include="..\mmRebarSolidAndVisible_2015\SelectionVariant.cs">
+      <Link>SelectionVariant.cs</Link>
+    </Compile>
+    <Compile Include="..\mmRebarSolidAndVisible_2015\SettingsWindow.xaml.cs">
+      <Link>SettingsWindow.xaml.cs</Link>
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ModPlusConnector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -74,5 +104,31 @@
       <Link>Resources\mmRebarSolidAndVisible_32x32.png</Link>
     </Resource>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\mmRebarSolidAndVisible_2015\Resources\mmRebarSolidAndVisibleOff_16x16.png">
+      <Link>Resources\mmRebarSolidAndVisibleOff_16x16.png</Link>
+    </Resource>
+    <Resource Include="..\mmRebarSolidAndVisible_2015\Resources\mmRebarSolidAndVisibleOff_32x32.png">
+      <Link>Resources\mmRebarSolidAndVisibleOff_32x32.png</Link>
+    </Resource>
+    <Resource Include="..\mmRebarSolidAndVisible_2015\Resources\mmRebarSolidAndVisibleSettings_16x16.png">
+      <Link>Resources\mmRebarSolidAndVisibleSettings_16x16.png</Link>
+    </Resource>
+    <Resource Include="..\mmRebarSolidAndVisible_2015\Resources\mmRebarSolidAndVisibleSettings_32x32.png">
+      <Link>Resources\mmRebarSolidAndVisibleSettings_32x32.png</Link>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="..\mmRebarSolidAndVisible_2015\SettingsWindow.xaml">
+      <Link>SettingsWindow.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == Release (
+"$(ModPlusPostBuild)" "Revit" "$(TargetPath)"
+)</PostBuildEvent>
+  </PropertyGroup>
 </Project>
