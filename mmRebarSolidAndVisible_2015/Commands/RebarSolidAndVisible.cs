@@ -16,6 +16,7 @@ namespace mmRebarSolidAndVisible
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            Statistic.SendCommandStarting(new ModPlusConnector());
             try
             {
                 var doc = commandData.Application.ActiveUIDocument.Document;
