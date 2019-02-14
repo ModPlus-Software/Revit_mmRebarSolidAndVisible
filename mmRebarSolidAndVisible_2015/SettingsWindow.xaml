@@ -17,6 +17,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -30,15 +31,21 @@
             <ComboBoxItem Content="{Binding Source={StaticResource Lang}, XPath=h4}"></ComboBoxItem>
             <ComboBoxItem Content="{Binding Source={StaticResource Lang}, XPath=h5}"></ComboBoxItem>
         </ComboBox>
-        <TextBlock Grid.Column="0" Grid.Row="1" Margin="{DynamicResource ModPlusDefaultMargin}"
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <CheckBox Name="ChkViewUnobscured" Content="{Binding Source={StaticResource Lang}, XPath=h6}"
+                      Unchecked="ChkViewUnobscured_OnUnchecked"></CheckBox>
+            <CheckBox Name="ChkViewAsSolid" Content="{Binding Source={StaticResource Lang}, XPath=h7}"
+                      Unchecked="ChkViewAsSolid_OnUnchecked"></CheckBox>
+        </StackPanel>
+        <TextBlock Grid.Column="0" Grid.Row="2" Margin="{DynamicResource ModPlusDefaultMargin}"
                    Text="{Binding Source={StaticResource Lang}, XPath=h2}"></TextBlock>
-        <ComboBox Grid.Row="1" Grid.Column="1" Width="200"
+        <ComboBox Grid.Row="2" Grid.Column="1" Width="200"
                   Name="CbOff">
             <ComboBoxItem Content="{Binding Source={StaticResource Lang}, XPath=h3}"></ComboBoxItem>
             <ComboBoxItem Content="{Binding Source={StaticResource Lang}, XPath=h4}"></ComboBoxItem>
             <ComboBoxItem Content="{Binding Source={StaticResource Lang}, XPath=h5}"></ComboBoxItem>
         </ComboBox>
-        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" IsDefault="True"
+        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" IsDefault="True"
                 Content="{Binding Source={StaticResource Lang}, XPath=close}"
                 Name="BtClose" Click="BtClose_OnClick"></Button>
     </Grid>

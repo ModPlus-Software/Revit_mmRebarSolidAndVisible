@@ -39,7 +39,7 @@ namespace mmRebarSolidAndVisible
                         {
                             if (element == null)
                                 continue;
-                            MainWork.SetRebarVisibilityForElement(doc.ActiveView, element, false);
+                            MainWork.DisableRebarVisibilityForElement(doc.ActiveView, element);
                         }
                     }
 

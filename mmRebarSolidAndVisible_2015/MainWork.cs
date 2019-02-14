@@ -51,7 +51,55 @@ namespace mmRebarSolidAndVisible
             }
         }
 
-        public static void SetRebarVisibilityForElement(View view, Element elem, bool solidAndUnobscured)
+        public static void EnableRebarVisibilityForElement(View view, Element elem, bool viewUnobscured, bool viewAsSolid)
+        {
+            // Get all rebars types
+            var data = Autodesk.Revit.DB.Structure.RebarHostData.GetRebarHostData(elem);
+
+            // Get rebars
+            var allRebar = data.GetRebarsInHost();
+            if (allRebar != null && allRebar.Any())
+            {
+                foreach (var rebars in allRebar)
+                {
+                    if (view.ViewType == ViewType.ThreeD && viewAsSolid)
+                        rebars.SetSolidInView((View3D) view, true);
+
+                    if (viewUnobscured)
+                        rebars.SetUnobscuredInView(view, true);
+                }
+            }
+
+            // Get all area reinforcement
+            var areaRebar = data.GetAreaReinforcementsInHost();
+            if (areaRebar != null && areaRebar.Any())
+            {
+                foreach (var rebars in areaRebar)
+                {
+                    if (view.ViewType == ViewType.ThreeD && viewAsSolid)
+                        rebars.SetSolidInView((View3D) view, true);
+
+                    if (viewUnobscured)
+                        rebars.SetUnobscuredInView(view, true);
+                }
+            }
+
+            // Get all path reinforcement
+            var pathRebar = data.GetPathReinforcementsInHost();
+            if (areaRebar != null && areaRebar.Any())
+            {
+                foreach (var rebars in pathRebar)
+                {
+                    if (view.ViewType == ViewType.ThreeD && viewAsSolid)
+                        rebars.SetSolidInView((View3D) view, true);
+
+                    if (viewUnobscured)
+                        rebars.SetUnobscuredInView(view, true);
+                }
+            }
+        }
+
+        public static void DisableRebarVisibilityForElement(View view, Element elem)
         {
             // Get all rebars types
             var data = Autodesk.Revit.DB.Structure.RebarHostData.GetRebarHostData(elem);
@@ -63,8 +111,8 @@ namespace mmRebarSolidAndVisible
                 foreach (var rebars in allRebar)
                 {
                     if (view.ViewType == ViewType.ThreeD)
-                        rebars.SetSolidInView((View3D)view, solidAndUnobscured);
-                    rebars.SetUnobscuredInView(view, solidAndUnobscured);
+                        rebars.SetSolidInView((View3D) view, false);
+                    rebars.SetUnobscuredInView(view, false);
                 }
             }
 
@@ -75,8 +123,8 @@ namespace mmRebarSolidAndVisible
                 foreach (var rebars in areaRebar)
                 {
                     if (view.ViewType == ViewType.ThreeD)
-                        rebars.SetSolidInView((View3D)view, solidAndUnobscured);
-                    rebars.SetUnobscuredInView(view, solidAndUnobscured);
+                        rebars.SetSolidInView((View3D)view, false);
+                    rebars.SetUnobscuredInView(view, false);
                 }
             }
 
@@ -87,8 +135,8 @@ namespace mmRebarSolidAndVisible
                 foreach (var rebars in pathRebar)
                 {
                     if (view.ViewType == ViewType.ThreeD)
-                        rebars.SetSolidInView((View3D)view, solidAndUnobscured);
-                    rebars.SetUnobscuredInView(view, solidAndUnobscured);
+                        rebars.SetSolidInView((View3D)view, false);
+                    rebars.SetUnobscuredInView(view, false);
                 }
             }
         }

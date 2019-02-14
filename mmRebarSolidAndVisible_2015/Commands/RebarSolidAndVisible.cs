@@ -24,6 +24,10 @@ namespace mmRebarSolidAndVisible
                     out SelectionVariant sv)
                     ? sv
                     : SelectionVariant.PickObject;
+                var viewUnobscured =
+                    !bool.TryParse(UserConfigFile.GetValue(LangItem, "ViewUnobscured"), out var b) || b;
+                var viewAsSolid =
+                    !bool.TryParse(UserConfigFile.GetValue(LangItem, "ViewAsSolid"), out b) || b;
 
                 using (Transaction transaction = new Transaction(doc))
                 {
@@ -39,7 +43,7 @@ namespace mmRebarSolidAndVisible
                         {
                             if (element == null)
                                 continue;
-                            MainWork.SetRebarVisibilityForElement(doc.ActiveView, element, true);
+                            MainWork.EnableRebarVisibilityForElement(doc.ActiveView, element, viewUnobscured, viewAsSolid);
                         }
                     }
 
