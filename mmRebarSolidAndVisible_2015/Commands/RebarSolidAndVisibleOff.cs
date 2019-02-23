@@ -4,6 +4,7 @@ namespace mmRebarSolidAndVisible
     using System;
     using Autodesk.Revit.Attributes;
     using Autodesk.Revit.DB;
+    using Autodesk.Revit.DB.Structure;
     using Autodesk.Revit.UI;
     using ModPlusAPI;
     using ModPlusAPI.Windows;
@@ -39,7 +40,14 @@ namespace mmRebarSolidAndVisible
                         {
                             if (element == null)
                                 continue;
-                            MainWork.DisableRebarVisibilityForElement(doc.ActiveView, element);
+                            if (element is Rebar rebar)
+                                MainWork.DisableRebarVisibility(doc.ActiveView, rebar);
+                            else if (element is AreaReinforcement areaReinforcement)
+                                MainWork.DisableRebarVisibility(doc.ActiveView, areaReinforcement);
+                            else if (element is PathReinforcement pathReinforcement)
+                                MainWork.DisableRebarVisibility(doc.ActiveView, pathReinforcement);
+                            else
+                                MainWork.DisableRebarVisibilityForElement(doc.ActiveView, element);
                         }
                     }
 

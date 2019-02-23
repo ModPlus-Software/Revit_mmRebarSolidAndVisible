@@ -7,16 +7,12 @@ namespace mmRebarSolidAndVisible
     {
         public bool AllowElement(Element e)
         {
-            return e.Category.Id.IntegerValue.Equals(
-                       (int)BuiltInCategory.OST_StructuralColumns) ||
-                   e.Category.Id.IntegerValue.Equals(
-                       (int)BuiltInCategory.OST_StructuralFoundation) ||
-                   e.Category.Id.IntegerValue.Equals(
-                       (int)BuiltInCategory.OST_Floors) ||
-                   e.Category.Id.IntegerValue.Equals(
-                       (int)BuiltInCategory.OST_Walls) ||
-                   e.Category.Id.IntegerValue.Equals(
-                       (int)BuiltInCategory.OST_StructuralFraming);
+            return e.Category.Id.IntegerValue.Equals((int)BuiltInCategory.OST_StructuralColumns) ||
+                   e.Category.Id.IntegerValue.Equals((int)BuiltInCategory.OST_StructuralFoundation) ||
+                   e.Category.Id.IntegerValue.Equals((int)BuiltInCategory.OST_Floors) ||
+                   e.Category.Id.IntegerValue.Equals((int)BuiltInCategory.OST_Walls) ||
+                   e.Category.Id.IntegerValue.Equals((int)BuiltInCategory.OST_StructuralFraming) ||
+                   e.Category.Id.IntegerValue.Equals((int)BuiltInCategory.OST_Rebar);
         }
         public bool AllowReference(Reference r, XYZ p)
         {
