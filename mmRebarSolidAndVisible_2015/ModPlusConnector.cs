@@ -20,6 +20,8 @@ namespace mmRebarSolidAndVisible
         public string AvailProductExternalVersion => "2018";
 #elif R2019
         public string AvailProductExternalVersion => "2019";
+#elif R2020
+        public string AvailProductExternalVersion => "2020";
 #endif
         
         public string FullClassName => "mmRebarSolidAndVisible.RebarSolidAndVisible";

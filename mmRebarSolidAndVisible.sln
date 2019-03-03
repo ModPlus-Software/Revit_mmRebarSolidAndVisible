@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mmRebarSolidAndVisible_2018
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mmRebarSolidAndVisible_2019", "mmRebarSolidAndVisible_2019\mmRebarSolidAndVisible_2019.csproj", "{7C68F7F7-02F4-4A08-8640-D34CD1560407}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mmRebarSolidAndVisible_2020", "mmRebarSolidAndVisible_2020\mmRebarSolidAndVisible_2020.csproj", "{2F80B019-1E11-4AC8-9913-18271C2387CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{7C68F7F7-02F4-4A08-8640-D34CD1560407}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C68F7F7-02F4-4A08-8640-D34CD1560407}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C68F7F7-02F4-4A08-8640-D34CD1560407}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F80B019-1E11-4AC8-9913-18271C2387CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F80B019-1E11-4AC8-9913-18271C2387CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F80B019-1E11-4AC8-9913-18271C2387CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F80B019-1E11-4AC8-9913-18271C2387CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
