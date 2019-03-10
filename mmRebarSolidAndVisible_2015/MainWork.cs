@@ -57,34 +57,36 @@ namespace mmRebarSolidAndVisible
         {
             // Get all rebars types
             var data = RebarHostData.GetRebarHostData(elem);
-
-            // Get rebars
-            var allRebar = data.GetRebarsInHost();
-            if (allRebar != null && allRebar.Any())
+            if (data != null)
             {
-                foreach (Rebar rebar in allRebar)
+                // Get rebars
+                var allRebar = data.GetRebarsInHost();
+                if (allRebar != null && allRebar.Any())
                 {
-                    EnableRebarVisibility(view, viewUnobscured, viewAsSolid, rebar);
+                    foreach (Rebar rebar in allRebar)
+                    {
+                        EnableRebarVisibility(view, viewUnobscured, viewAsSolid, rebar);
+                    }
                 }
-            }
 
-            // Get all area reinforcement
-            var areaRebar = data.GetAreaReinforcementsInHost();
-            if (areaRebar != null && areaRebar.Any())
-            {
-                foreach (var rebar in areaRebar)
+                // Get all area reinforcement
+                var areaRebar = data.GetAreaReinforcementsInHost();
+                if (areaRebar != null && areaRebar.Any())
                 {
-                    EnableRebarVisibility(view, viewUnobscured, viewAsSolid, rebar);
+                    foreach (var rebar in areaRebar)
+                    {
+                        EnableRebarVisibility(view, viewUnobscured, viewAsSolid, rebar);
+                    }
                 }
-            }
 
-            // Get all path reinforcement
-            var pathRebar = data.GetPathReinforcementsInHost();
-            if (areaRebar != null && areaRebar.Any())
-            {
-                foreach (var rebar in pathRebar)
+                // Get all path reinforcement
+                var pathRebar = data.GetPathReinforcementsInHost();
+                if (areaRebar != null && areaRebar.Any())
                 {
-                    EnableRebarVisibility(view, viewUnobscured, viewAsSolid, rebar);
+                    foreach (var rebar in pathRebar)
+                    {
+                        EnableRebarVisibility(view, viewUnobscured, viewAsSolid, rebar);
+                    }
                 }
             }
         }
@@ -121,33 +123,36 @@ namespace mmRebarSolidAndVisible
             // Get all rebars types
             var data = RebarHostData.GetRebarHostData(elem);
 
-            // Get rebars
-            var allRebar = data.GetRebarsInHost();
-            if (allRebar != null && allRebar.Any())
+            if (data != null)
             {
-                foreach (var rebar in allRebar)
+                // Get rebars
+                var allRebar = data.GetRebarsInHost();
+                if (allRebar != null && allRebar.Any())
                 {
-                    DisableRebarVisibility(view, rebar);
+                    foreach (var rebar in allRebar)
+                    {
+                        DisableRebarVisibility(view, rebar);
+                    }
                 }
-            }
 
-            // Get all area reinforcement
-            var areaRebar = data.GetAreaReinforcementsInHost();
-            if (areaRebar != null && areaRebar.Any())
-            {
-                foreach (AreaReinforcement rebar in areaRebar)
+                // Get all area reinforcement
+                var areaRebar = data.GetAreaReinforcementsInHost();
+                if (areaRebar != null && areaRebar.Any())
                 {
-                    DisableRebarVisibility(view, rebar);
+                    foreach (AreaReinforcement rebar in areaRebar)
+                    {
+                        DisableRebarVisibility(view, rebar);
+                    }
                 }
-            }
 
-            // Get all path reinforcement
-            var pathRebar = data.GetPathReinforcementsInHost();
-            if (areaRebar != null && areaRebar.Any())
-            {
-                foreach (PathReinforcement rebar in pathRebar)
+                // Get all path reinforcement
+                var pathRebar = data.GetPathReinforcementsInHost();
+                if (areaRebar != null && areaRebar.Any())
                 {
-                    DisableRebarVisibility(view, rebar);
+                    foreach (PathReinforcement rebar in pathRebar)
+                    {
+                        DisableRebarVisibility(view, rebar);
+                    }
                 }
             }
         }
