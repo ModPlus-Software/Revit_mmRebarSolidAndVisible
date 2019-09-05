@@ -18,37 +18,34 @@ namespace mmRebarSolidAndVisible
             switch (selectionVariant)
             {
                 case SelectionVariant.AllOnView:
-                    return new FilteredElementCollector(doc, doc.ActiveView.Id)
-                        .WhereElementIsNotElementType()
-                        .Where(e => e.IsValidObject && e.Category != null)
-                        .Where(e =>
-                            e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_StructuralColumns ||
-                            e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_StructuralFoundation ||
-                            e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Floors ||
-                            e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Walls ||
-                            e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_StructuralFraming ||
-                            e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Rebar)
-                        .ToList();
+                    {
+                        return new FilteredElementCollector(doc, doc.ActiveView.Id)
+                              .WhereElementIsNotElementType()
+                              .Where(e => e.IsValidObject && e.Category != null)
+                              .Where(e =>
+                                  e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_StructuralColumns ||
+                                  e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_StructuralFoundation ||
+                                  e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Floors ||
+                                  e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Walls ||
+                                  e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_StructuralFraming ||
+                                  e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Rebar)
+                              .ToList();
+                    }
                 case SelectionVariant.PickObjects:
                     {
                         var pickedRefs = uiApp.ActiveUIDocument.Selection.PickObjects(
                             ObjectType.Element, new ObjReinPickFilter(), Language.GetItem(LangItem, "msg2"));
-                        List<Element> elements = new List<Element>();
-                        foreach (var reference in pickedRefs)
-                        {
-                            elements.Add(doc.GetElement(reference));
-                        }
 
-                        return elements;
+                        return pickedRefs.Select(reference => doc.GetElement(reference)).ToList();
                     }
                 default:
                     {
                         var pickedRef = uiApp.ActiveUIDocument.Selection.PickObject(
                             ObjectType.Element, new ObjReinPickFilter(), Language.GetItem(LangItem, "msg1"));
                         return new List<Element>
-                    {
-                        doc.GetElement(pickedRef)
-                    };
+                        {
+                            doc.GetElement(pickedRef)
+                        };
                     }
             }
         }
@@ -88,6 +85,17 @@ namespace mmRebarSolidAndVisible
                         EnableRebarVisibility(view, viewUnobscured, viewAsSolid, rebar);
                     }
                 }
+
+#if !R2015
+                var rebarContainers = data.GetRebarContainersInHost();
+                if (rebarContainers != null && rebarContainers.Any())
+                {
+                    foreach (var rebarContainer in rebarContainers)
+                    {
+                        EnableRebarVisibility(view, viewUnobscured, viewAsSolid, rebarContainer);
+                    }
+                }
+#endif
             }
         }
 
@@ -117,6 +125,17 @@ namespace mmRebarSolidAndVisible
             if (viewUnobscured)
                 rebar.SetUnobscuredInView(view, true);
         }
+
+#if !R2015
+        public static void EnableRebarVisibility(View view, bool viewUnobscured, bool viewAsSolid, RebarContainer rebar)
+        {
+            if (view.ViewType == ViewType.ThreeD && viewAsSolid)
+                rebar.SetSolidInView((View3D)view, true);
+
+            if (viewUnobscured)
+                rebar.SetUnobscuredInView(view, true);
+        }
+#endif
 
         public static void DisableRebarVisibilityForElement(View view, Element elem)
         {
@@ -154,6 +173,17 @@ namespace mmRebarSolidAndVisible
                         DisableRebarVisibility(view, rebar);
                     }
                 }
+
+#if !R2015
+                var rebarContainers = data.GetRebarContainersInHost();
+                if (rebarContainers != null && rebarContainers.Any())
+                {
+                    foreach (var rebarContainer in rebarContainers)
+                    {
+                        DisableRebarVisibility(view, rebarContainer);
+                    }
+                }
+#endif
             }
         }
 
@@ -177,5 +207,13 @@ namespace mmRebarSolidAndVisible
                 rebar.SetSolidInView((View3D)view, false);
             rebar.SetUnobscuredInView(view, false);
         }
+#if !R2015
+        public static void DisableRebarVisibility(View view, RebarContainer rebar)
+        {
+            if (view.ViewType == ViewType.ThreeD)
+                rebar.SetSolidInView((View3D)view, false);
+            rebar.SetUnobscuredInView(view, false);
+        }
+#endif
     }
 }
