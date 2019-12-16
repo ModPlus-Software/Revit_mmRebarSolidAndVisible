@@ -13,7 +13,7 @@ namespace mmRebarSolidAndVisible
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             Statistic.SendCommandStarting(new ModPlusConnector());
-            SettingsWindow window = new SettingsWindow();
+            var window = new SettingsWindow();
             window.ShowDialog();
             return Result.Succeeded;
         }

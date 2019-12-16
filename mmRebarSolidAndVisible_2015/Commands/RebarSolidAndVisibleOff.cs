@@ -21,8 +21,8 @@ namespace mmRebarSolidAndVisible
             try
             {
                 var doc = commandData.Application.ActiveUIDocument.Document;
-                var selectionVariant = Enum.TryParse(UserConfigFile.GetValue(LangItem, "OffSelectionVariant"),
-                    out SelectionVariant sv)
+                var selectionVariant = Enum.TryParse(
+                    UserConfigFile.GetValue(LangItem, "OffSelectionVariant"), out SelectionVariant sv)
                     ? sv
                     : SelectionVariant.PickObject;
 

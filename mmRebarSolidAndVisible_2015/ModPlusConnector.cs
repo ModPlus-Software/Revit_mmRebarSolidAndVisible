@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using ModPlusAPI.Interfaces;
-
+﻿#pragma warning disable SA1600 // Elements should be documented
 namespace mmRebarSolidAndVisible
 {
+    using System;
+    using System.Collections.Generic;
+    using ModPlusAPI.Interfaces;
+
     public class ModPlusConnector : IModPlusFunctionInterface
     {
         public SupportedProduct SupportedProduct => SupportedProduct.Revit;
@@ -62,9 +63,9 @@ namespace mmRebarSolidAndVisible
             "Настройки вариантов выбора элементов, содержащих арматуру, при работе функций"
         };
 
-        public List<string> SubFullDescriptions => new List<string> { "", "" };
+        public List<string> SubFullDescriptions => new List<string> { string.Empty, string.Empty };
 
-        public List<string> SubHelpImages => new List<string> { "", "" };
+        public List<string> SubHelpImages => new List<string> { string.Empty, string.Empty };
 
         public List<string> SubClassNames => new List<string>
         {
@@ -73,3 +74,4 @@ namespace mmRebarSolidAndVisible
         };
     }
 }
+#pragma warning restore SA1600 // Elements should be documented

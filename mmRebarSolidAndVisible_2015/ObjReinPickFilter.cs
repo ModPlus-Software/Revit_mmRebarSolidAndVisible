@@ -14,6 +14,7 @@ namespace mmRebarSolidAndVisible
                    e.Category.Id.IntegerValue.Equals((int)BuiltInCategory.OST_StructuralFraming) ||
                    e.Category.Id.IntegerValue.Equals((int)BuiltInCategory.OST_Rebar);
         }
+
         public bool AllowReference(Reference r, XYZ p)
         {
             return false;

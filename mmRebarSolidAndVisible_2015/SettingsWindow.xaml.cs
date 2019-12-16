@@ -12,8 +12,8 @@
         {
             InitializeComponent();
             Title = ModPlusAPI.Language.GetFunctionLocalName(LangItem, "Настройки видимости элементов", 2);
-            CbOn.SelectedIndex = Enum.TryParse(UserConfigFile.GetValue(LangItem, "OnSelectionVariant"),
-                out SelectionVariant sv)
+            CbOn.SelectedIndex = Enum.TryParse(
+                UserConfigFile.GetValue(LangItem, "OnSelectionVariant"), out SelectionVariant sv)
                 ? (int)sv
                 : (int)SelectionVariant.PickObject;
             CbOff.SelectedIndex = Enum.TryParse(UserConfigFile.GetValue(LangItem, "OffSelectionVariant"), out sv)
