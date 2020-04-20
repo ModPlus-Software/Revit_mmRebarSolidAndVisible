@@ -22,15 +22,10 @@ namespace mmRebarSolidAndVisible
                         return new FilteredElementCollector(doc, doc.ActiveView.Id)
                               .WhereElementIsNotElementType()
                               .Where(e => e.IsValidObject && e.Category != null)
-                              .Where(e =>
-                                  e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_StructuralColumns ||
-                                  e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_StructuralFoundation ||
-                                  e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Floors ||
-                                  e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Walls ||
-                                  e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_StructuralFraming ||
-                                  e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Rebar)
+                              .Where(ObjReinPickFilter.IsAllowableElement)
                               .ToList();
                     }
+
                 case SelectionVariant.PickObjects:
                     {
                         var pickedRefs = uiApp.ActiveUIDocument.Selection.PickObjects(
@@ -38,6 +33,7 @@ namespace mmRebarSolidAndVisible
 
                         return pickedRefs.Select(reference => doc.GetElement(reference)).ToList();
                     }
+
                 default:
                     {
                         var pickedRef = uiApp.ActiveUIDocument.Selection.PickObject(
