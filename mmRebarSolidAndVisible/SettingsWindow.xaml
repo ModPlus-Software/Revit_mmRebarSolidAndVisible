@@ -1,52 +1,70 @@
 ﻿<mps:ModPlusWindow x:Class="mmRebarSolidAndVisible.SettingsWindow"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mps="https://modplus.org/winfx/xaml/controls"
-             SizeToContent="WidthAndHeight" ResizeMode="NoResize"
-             Closed="SettingsWindow_OnClosed">
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:mps="https://modplus.org/winfx/xaml/controls"
+                   xmlns:mmRebarSolidAndVisible="clr-namespace:mmRebarSolidAndVisible"
+                   xmlns:converters="clr-namespace:ModPlusAPI.Converters;assembly=ModPlusAPI"
+                   SizeToContent="WidthAndHeight" ResizeMode="NoResize"
+                   WindowStartupLocation="CenterScreen"
+                   mc:Ignorable="d" Name="Window" Topmost="True"
+                   d:DataContext="{d:DesignInstance mmRebarSolidAndVisible:MainContext, IsDesignTimeCreatable=False}">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/ModPlusStyle;component/Styles/Controls.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <XmlDataProvider x:Key="Lang" Source="E:/ModPlus/Languages/en-US.xml" XPath="ModPlus/mmRebarSolidAndVisible" IsAsynchronous="False"/>
+            <XmlDataProvider x:Key="Lang" Source="E:/ModPlus/Languages/en-US.xml" XPath="ModPlus/mmRebarSolidAndVisible"/>
+            <converters:EnumToIntConverter x:Key="EnumToIntConverter"/>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <TextBlock Grid.Column="0" Grid.Row="0" Margin="{DynamicResource ModPlusDefaultMargin}"
-                   Text="{Binding Source={StaticResource Lang}, XPath=h1}"></TextBlock>
-        <ComboBox Grid.Row="0" Grid.Column="1" Width="200"
-                  Name="CbOn">
-            <ComboBoxItem Content="{Binding Source={StaticResource Lang}, XPath=h3}"></ComboBoxItem>
-            <ComboBoxItem Content="{Binding Source={StaticResource Lang}, XPath=h4}"></ComboBoxItem>
-            <ComboBoxItem Content="{Binding Source={StaticResource Lang}, XPath=h5}"></ComboBoxItem>
-        </ComboBox>
-        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
-            <CheckBox Name="ChkViewUnobscured" Content="{Binding Source={StaticResource Lang}, XPath=h6}"
-                      Unchecked="ChkViewUnobscured_OnUnchecked"></CheckBox>
-            <CheckBox Name="ChkViewAsSolid" Content="{Binding Source={StaticResource Lang}, XPath=h7}"
-                      Unchecked="ChkViewAsSolid_OnUnchecked"></CheckBox>
-        </StackPanel>
-        <TextBlock Grid.Column="0" Grid.Row="2" Margin="{DynamicResource ModPlusDefaultMargin}"
-                   Text="{Binding Source={StaticResource Lang}, XPath=h2}"></TextBlock>
-        <ComboBox Grid.Row="2" Grid.Column="1" Width="200"
-                  Name="CbOff">
-            <ComboBoxItem Content="{Binding Source={StaticResource Lang}, XPath=h3}"></ComboBoxItem>
-            <ComboBoxItem Content="{Binding Source={StaticResource Lang}, XPath=h4}"></ComboBoxItem>
-            <ComboBoxItem Content="{Binding Source={StaticResource Lang}, XPath=h5}"></ComboBoxItem>
-        </ComboBox>
-        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" IsDefault="True"
-                Content="{Binding Source={StaticResource Lang}, XPath=close}"
-                Name="BtClose" Click="BtClose_OnClick"></Button>
-    </Grid>
+    <StackPanel Orientation="Vertical">
+        <GroupBox IsEnabled="{Binding Path=CanChangeRebarAsSolidOnCurrentView}">
+            <GroupBox.Header>
+                <CheckBox Content="{Binding Source={StaticResource Lang}, XPath=h7}" Margin="0"
+                          IsChecked="{Binding Path=Settings.IsActiveChangeSolidInViewProperty}"/>
+            </GroupBox.Header>
+            <StackPanel Orientation="Vertical" 
+                        IsEnabled="{Binding Path=Settings.IsActiveChangeSolidInViewProperty}">
+                <RadioButton Content="{Binding Source={StaticResource Lang}, XPath=h2}"
+                             IsChecked="{Binding Path=Settings.ShowAsSolidInThreeDView}"/>
+                <RadioButton Content="{Binding Source={StaticResource Lang}, XPath=h8}"
+                             IsChecked="{Binding Path=Settings.ShowAsLineInThreeDView}"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox>
+            <GroupBox.Header>
+                <CheckBox Content="{Binding Source={StaticResource Lang}, XPath=h6}" Margin="0"
+                          IsChecked="{Binding Path=Settings.IsActiveChangeUnobscuredInViewProperty}"/>
+            </GroupBox.Header>
+            <StackPanel Orientation="Vertical"
+                        IsEnabled="{Binding Path=Settings.IsActiveChangeUnobscuredInViewProperty}">
+                <RadioButton Content="{Binding Source={StaticResource Lang}, XPath=h9}"
+                             IsChecked="{Binding Path=Settings.ShowAsUnobscured}"/>
+                <RadioButton Content="{Binding Source={StaticResource Lang}, XPath=h10}"
+                             IsChecked="{Binding Path=Settings.ShowAsHidden}"/>
+            </StackPanel>
+        </GroupBox>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Margin="{DynamicResource ModPlusDefaultMargin}"
+                       Text="{Binding Source={StaticResource Lang}, XPath=h1}"/>
+            <ComboBox Grid.Column="1" 
+                      SelectedIndex="{Binding Path=Settings.ElementsProcessVariant, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,
+                Converter={StaticResource EnumToIntConverter}, ConverterParameter={x:Type mmRebarSolidAndVisible:ElementsProcessVariant}}">
+                <ComboBoxItem Content="{Binding Source={StaticResource Lang}, XPath=h3}"/>
+                <ComboBoxItem Content="{Binding Source={StaticResource Lang}, XPath=h4}"/>
+                <ComboBoxItem Content="{Binding Source={StaticResource Lang}, XPath=h5}"/>
+            </ComboBox>
+        </Grid>
+        
+        <Button Content="{Binding Path=ProcessButtonText}" IsDefault="True"
+                Command="{Binding Path=ProcessCommand}"
+                CommandParameter="{Binding ElementName=Window}"/>
+    </StackPanel>
 </mps:ModPlusWindow>

@@ -8,208 +8,175 @@ namespace mmRebarSolidAndVisible
     using Autodesk.Revit.UI.Selection;
     using ModPlusAPI;
 
-    public static class MainWork
+    public class MainWork
     {
+        private readonly UIApplication _uiApplication;
+        private readonly Document _doc;
+        private readonly View _view;
+        private readonly PluginSettings _settings;
         private const string LangItem = "mmRebarSolidAndVisible";
 
-        public static List<Element> GetElements(UIApplication uiApp, SelectionVariant selectionVariant)
+        public MainWork(UIApplication uiApplication, PluginSettings settings)
         {
-            var doc = uiApp.ActiveUIDocument.Document;
-            switch (selectionVariant)
+            _uiApplication = uiApplication;
+            _doc = uiApplication.ActiveUIDocument.Document;
+            _view = _doc.ActiveView;
+            _settings = settings;
+        }
+
+        public void Process()
+        {
+            if (!_settings.IsActiveChangeSolidInViewProperty && !_settings.IsActiveChangeUnobscuredInViewProperty)
+                return;
+
+            bool? showUnobscured = null;
+            if (_settings.IsActiveChangeUnobscuredInViewProperty)
+                showUnobscured = _settings.ShowAsUnobscured;
+            bool? showAsSolid = null;
+            if (_settings.IsActiveChangeSolidInViewProperty)
+                showAsSolid = _settings.ShowAsSolidInThreeDView;
+
+            using (var transaction = new Transaction(_doc))
             {
-                case SelectionVariant.AllOnView:
+                var trName = Language.GetItem(LangItem, "t1");
+                if (string.IsNullOrEmpty(trName))
+                    trName = "Изменение видимости арматуры";
+                transaction.Start(trName);
+
+                var list = GetElements();
+                if (list != null)
+                {
+                    foreach (var element in list)
                     {
-                        return new FilteredElementCollector(doc, doc.ActiveView.Id)
+                        if (element == null)
+                            continue;
+                        if (element is Rebar rebar)
+                            ChangeRebarVisibility(rebar, showUnobscured, showAsSolid);
+                        else if (element is AreaReinforcement areaReinforcement)
+                            ChangeRebarVisibility(areaReinforcement, showUnobscured, showAsSolid);
+                        else if (element is PathReinforcement pathReinforcement)
+                            ChangeRebarVisibility(pathReinforcement, showUnobscured, showAsSolid);
+                        else if (element is RebarContainer rebarContainer)
+                            ChangeRebarVisibility(rebarContainer, showUnobscured, showAsSolid);
+                        else
+                            ChangeRebarVisibilityForHostElement(element, showUnobscured, showAsSolid);
+                    }
+                }
+
+                transaction.Commit();
+            }
+        }
+
+        private List<Element> GetElements()
+        {
+            switch (_settings.ElementsProcessVariant)
+            {
+                case ElementsProcessVariant.AllElementsOnView:
+                    {
+                        return new FilteredElementCollector(_doc, _view.Id)
                               .WhereElementIsNotElementType()
                               .Where(e => e.IsValidObject && e.Category != null)
-                              .Where(ObjReinPickFilter.IsAllowableElement)
+                              .Where(ReinforcementSelectionFilter.IsAllowableElement)
                               .ToList();
                     }
 
-                case SelectionVariant.PickObjects:
+                case ElementsProcessVariant.SelectedElements:
                     {
-                        var pickedRefs = uiApp.ActiveUIDocument.Selection.PickObjects(
-                            ObjectType.Element, new ObjReinPickFilter(), Language.GetItem(LangItem, "msg2"));
+                        var pickedRefs = _uiApplication.ActiveUIDocument.Selection.PickObjects(
+                            ObjectType.Element, new ReinforcementSelectionFilter(), Language.GetItem(LangItem, "msg2"));
 
-                        return pickedRefs.Select(reference => doc.GetElement(reference)).ToList();
+                        return pickedRefs.Select(reference => _doc.GetElement(reference)).ToList();
                     }
 
                 default:
                     {
-                        var pickedRef = uiApp.ActiveUIDocument.Selection.PickObject(
-                            ObjectType.Element, new ObjReinPickFilter(), Language.GetItem(LangItem, "msg1"));
+                        var pickedRef = _uiApplication.ActiveUIDocument.Selection.PickObject(
+                            ObjectType.Element, new ReinforcementSelectionFilter(), Language.GetItem(LangItem, "msg1"));
                         return new List<Element>
                         {
-                            doc.GetElement(pickedRef)
+                            _doc.GetElement(pickedRef)
                         };
                     }
             }
         }
 
-        public static void EnableRebarVisibilityForElement(View view, Element elem, bool viewUnobscured, bool viewAsSolid)
+        private void ChangeRebarVisibilityForHostElement(Element elem, bool? showUnobscured, bool? showAsSolid)
         {
-            // Get all rebars types
             var data = RebarHostData.GetRebarHostData(elem);
             if (data != null)
             {
-                // Get rebars
-                var allRebar = data.GetRebarsInHost();
-                if (allRebar != null && allRebar.Any())
+                var rebarsInHost = data.GetRebarsInHost();
+                if (rebarsInHost != null && rebarsInHost.Any())
                 {
-                    foreach (Rebar rebar in allRebar)
+                    foreach (var rebar in rebarsInHost)
                     {
-                        EnableRebarVisibility(view, viewUnobscured, viewAsSolid, rebar);
+                        ChangeRebarVisibility(rebar, showUnobscured, showAsSolid);
                     }
                 }
 
-                // Get all area reinforcement
                 var areaRebar = data.GetAreaReinforcementsInHost();
                 if (areaRebar != null && areaRebar.Any())
                 {
                     foreach (var rebar in areaRebar)
                     {
-                        EnableRebarVisibility(view, viewUnobscured, viewAsSolid, rebar);
+                        ChangeRebarVisibility(rebar, showUnobscured, showAsSolid);
                     }
                 }
 
-                // Get all path reinforcement
                 var pathRebar = data.GetPathReinforcementsInHost();
                 if (areaRebar != null && areaRebar.Any())
                 {
                     foreach (var rebar in pathRebar)
                     {
-                        EnableRebarVisibility(view, viewUnobscured, viewAsSolid, rebar);
+                        ChangeRebarVisibility(rebar, showUnobscured, showAsSolid);
                     }
                 }
 
-#if !R2015
                 var rebarContainers = data.GetRebarContainersInHost();
                 if (rebarContainers != null && rebarContainers.Any())
                 {
-                    foreach (var rebarContainer in rebarContainers)
+                    foreach (var rebar in rebarContainers)
                     {
-                        EnableRebarVisibility(view, viewUnobscured, viewAsSolid, rebarContainer);
+                        ChangeRebarVisibility(rebar, showUnobscured, showAsSolid);
                     }
                 }
-#endif
             }
         }
 
-        public static void EnableRebarVisibility(View view, bool viewUnobscured, bool viewAsSolid, Rebar rebar)
+        private void ChangeRebarVisibility(Rebar rebar, bool? showUnobscured, bool? showAsSolid)
         {
-            if (view.ViewType == ViewType.ThreeD && viewAsSolid)
-                rebar.SetSolidInView((View3D)view, true);
+            if (showUnobscured.HasValue)
+                rebar.SetUnobscuredInView(_view, showUnobscured.Value);
 
-            if (viewUnobscured)
-                rebar.SetUnobscuredInView(view, true);
+            if (showAsSolid.HasValue && (_view is View3D view3D))
+                rebar.SetSolidInView(view3D, showAsSolid.Value);
         }
 
-        public static void EnableRebarVisibility(View view, bool viewUnobscured, bool viewAsSolid, PathReinforcement rebar)
+        private void ChangeRebarVisibility(PathReinforcement rebar, bool? showUnobscured, bool? showAsSolid)
         {
-            if (view.ViewType == ViewType.ThreeD && viewAsSolid)
-                rebar.SetSolidInView((View3D)view, true);
+            if (showUnobscured.HasValue)
+                rebar.SetUnobscuredInView(_view, showUnobscured.Value);
 
-            if (viewUnobscured)
-                rebar.SetUnobscuredInView(view, true);
+            if (showAsSolid.HasValue && (_view is View3D view3D))
+                rebar.SetSolidInView(view3D, showAsSolid.Value);
         }
 
-        public static void EnableRebarVisibility(View view, bool viewUnobscured, bool viewAsSolid, AreaReinforcement rebar)
+        private void ChangeRebarVisibility(AreaReinforcement rebar, bool? showUnobscured, bool? showAsSolid)
         {
-            if (view.ViewType == ViewType.ThreeD && viewAsSolid)
-                rebar.SetSolidInView((View3D)view, true);
+            if (showUnobscured.HasValue)
+                rebar.SetUnobscuredInView(_view, showUnobscured.Value);
 
-            if (viewUnobscured)
-                rebar.SetUnobscuredInView(view, true);
+            if (showAsSolid.HasValue && (_view is View3D view3D))
+                rebar.SetSolidInView(view3D, showAsSolid.Value);
         }
 
-#if !R2015
-        public static void EnableRebarVisibility(View view, bool viewUnobscured, bool viewAsSolid, RebarContainer rebar)
+        private void ChangeRebarVisibility(RebarContainer rebar, bool? showUnobscured, bool? showAsSolid)
         {
-            if (view.ViewType == ViewType.ThreeD && viewAsSolid)
-                rebar.SetSolidInView((View3D)view, true);
+            if (showUnobscured.HasValue)
+                rebar.SetUnobscuredInView(_view, showUnobscured.Value);
 
-            if (viewUnobscured)
-                rebar.SetUnobscuredInView(view, true);
+            if (showAsSolid.HasValue && (_view is View3D view3D))
+                rebar.SetSolidInView(view3D, showAsSolid.Value);
         }
-#endif
-
-        public static void DisableRebarVisibilityForElement(View view, Element elem)
-        {
-            // Get all rebars types
-            var data = RebarHostData.GetRebarHostData(elem);
-
-            if (data != null)
-            {
-                // Get rebars
-                var allRebar = data.GetRebarsInHost();
-                if (allRebar != null && allRebar.Any())
-                {
-                    foreach (var rebar in allRebar)
-                    {
-                        DisableRebarVisibility(view, rebar);
-                    }
-                }
-
-                // Get all area reinforcement
-                var areaRebar = data.GetAreaReinforcementsInHost();
-                if (areaRebar != null && areaRebar.Any())
-                {
-                    foreach (AreaReinforcement rebar in areaRebar)
-                    {
-                        DisableRebarVisibility(view, rebar);
-                    }
-                }
-
-                // Get all path reinforcement
-                var pathRebar = data.GetPathReinforcementsInHost();
-                if (areaRebar != null && areaRebar.Any())
-                {
-                    foreach (PathReinforcement rebar in pathRebar)
-                    {
-                        DisableRebarVisibility(view, rebar);
-                    }
-                }
-
-#if !R2015
-                var rebarContainers = data.GetRebarContainersInHost();
-                if (rebarContainers != null && rebarContainers.Any())
-                {
-                    foreach (var rebarContainer in rebarContainers)
-                    {
-                        DisableRebarVisibility(view, rebarContainer);
-                    }
-                }
-#endif
-            }
-        }
-
-        public static void DisableRebarVisibility(View view, Rebar rebar)
-        {
-            if (view.ViewType == ViewType.ThreeD)
-                rebar.SetSolidInView((View3D)view, false);
-            rebar.SetUnobscuredInView(view, false);
-        }
-
-        public static void DisableRebarVisibility(View view, PathReinforcement rebar)
-        {
-            if (view.ViewType == ViewType.ThreeD)
-                rebar.SetSolidInView((View3D)view, false);
-            rebar.SetUnobscuredInView(view, false);
-        }
-
-        public static void DisableRebarVisibility(View view, AreaReinforcement rebar)
-        {
-            if (view.ViewType == ViewType.ThreeD)
-                rebar.SetSolidInView((View3D)view, false);
-            rebar.SetUnobscuredInView(view, false);
-        }
-#if !R2015
-        public static void DisableRebarVisibility(View view, RebarContainer rebar)
-        {
-            if (view.ViewType == ViewType.ThreeD)
-                rebar.SetSolidInView((View3D)view, false);
-            rebar.SetUnobscuredInView(view, false);
-        }
-#endif
     }
 }
