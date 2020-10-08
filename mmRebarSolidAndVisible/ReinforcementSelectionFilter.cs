@@ -31,7 +31,9 @@ namespace mmRebarSolidAndVisible
                    e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_StructuralFraming ||
                    e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Rebar ||
                    e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_EdgeSlab ||
-                   e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Stairs;
+                   e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Stairs ||
+                   e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_PathRein ||
+                   e.Category.Id.IntegerValue == (int)BuiltInCategory.OST_AreaRein;
         }
     }
 }
